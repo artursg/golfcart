@@ -56,17 +56,17 @@
   <!-- The specifications for a Titan(R) 550 motor could not be found, so the
        stall torque of a Mabuchi Motor(R) RS-550VC-7525 motor was used instead.
 
-       num_spur_gear_teeth = 68
-       num_pinion_gear_teeth = 19
-       final_gear_ratio = (num_spur_gear_teeth / num_pinion_gear_teeth) *
-         5.22 = 18.68
-       stall_torque = 0.549 N m
-       axle_eff_limit = ((2 * stall_torque) * final_gear_ratio) / 4 =
-         5.12766 N m
+num_spur_gear_teeth = 68
+num_pinion_gear_teeth = 19
+final_gear_ratio = (num_spur_gear_teeth / num_pinion_gear_teeth) *
+5.22 = 18.68
+stall_torque = 0.549 N m
+axle_eff_limit = ((2 * stall_torque) * final_gear_ratio) / 4 =
+5.12766 N m
 
-       max_speed = 40 mph (30+ mph) = 17.8816 m/s
-       axle_vel_limit = (2 * pi) * (max_speed / (pi * tire_dia)) =
-         244.8696 rad/s -->
+max_speed = 40 mph (30+ mph) = 17.8816 m/s
+axle_vel_limit = (2 * pi) * (max_speed / (pi * tire_dia)) =
+244.8696 rad/s -->
   <xacro:property name="axle_eff_limit" value="5.12766"/>
   <xacro:property name="axle_vel_limit" value="244.8696"/>
 
@@ -166,8 +166,8 @@
       </collision>
 
       <xacro:solid_cuboid_inertial
-         width="${battery_length}" depth="${battery_width}"
-         height="${battery_height}" mass="${battery_mass}">
+          width="${battery_length}" depth="${battery_width}"
+          height="${battery_height}" mass="${battery_mass}">
         <origin/>
       </xacro:solid_cuboid_inertial>
     </link>
@@ -314,25 +314,52 @@
        rviz. -->
   <link name="base_link">
     <visual>
-    	<origin rpy="0 0 1.57079633" xyz="1.2 -1.035 -0.2"/>
+      <origin rpy="0 0 1.57079633" xyz="1.2 -1.035 -0.2"/>
       <geometry>
         <mesh filename="package://golfcart_description/meshes/GolfCart.stl"/>
       </geometry>
-
       <material name="chassis_mat"/>
     </visual>
+    <collision>
+      <origin rpy="0 0 1.57079633" xyz="1.2 -1.035 -0.2"/>
+      <geometry>
+        <mesh filename="package://golfcart_description/meshes/GolfCart.stl"/>
+      </geometry>
+    </collision>
   </link>
   <gazebo reference="base_link">
     <material>Gazebo/Grey</material>
   </gazebo>
 
+  <joint name="laser_joint" type="fixed">
+    <origin xyz="0.95 0.00 0.25" rpy="3.14159 0 0" />
+    <parent link="base_link" />
+    <child link="laser" />
+  </joint>
+
+  <link name="laser">
+    <visual>
+      <geometry>
+        <box size="0.02 0.05 0.06" />
+      </geometry>
+      <material name="Green" />
+    </visual>
+    <inertial>
+      <mass value="0.000001" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+               iyy="0.0001" iyz="0.0"
+               izz="0.0001" />
+    </inertial>
+  </link>
+  
   <!-- Chassis -->
   <link name="chassis">
     <visual>
       <origin xyz="0 0 ${-chassis_height / 2}"/>
       <geometry>
         <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
-       
+	
       </geometry>
       <material name="chassis_mat"/>
     </visual>
@@ -372,14 +399,44 @@
                     lr_reflect="1" fr_reflect="-1"/>
   <xacro:rear_wheel lr_prefix="right" fr_prefix="rear"
                     lr_reflect="-1" fr_reflect="-1"/>
-
+  <gazebo reference="laser">
+    <sensor type="ray" name="front_laser">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>0.1</resolution>
+            <min_angle>-0.970796</min_angle>
+            <max_angle>0.970796</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>20.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
+        <topicName>scan</topicName>
+        <frameName>laser</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
     <plugin name="em_3905" filename="libgazebo_ros_p3d.so">
-    	<frameName>map</frameName>
-    	<bodyName>base_link</bodyName>
-    	<topicName>odom</topicName>
-    	<updateRate>1.0</updateRate>
+      <frameName>map</frameName>
+      <bodyName>base_link</bodyName>
+      <topicName>odom</topicName>
+      <updateRate>1.0</updateRate>
     </plugin>
   </gazebo>
 </robot>
