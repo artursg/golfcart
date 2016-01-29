@@ -15,5 +15,6 @@
       <param name="publish_frequency" value="30.0"/>
       <param name="tf_prefix" value="$(arg namespace)" />
     </node>
+    <node pkg="tf" type="static_transform_publisher" name="odom_broadcaster" args="1 0 0 1 0 0 0 $(arg namespace)/odom $(arg namespace)/base_link 100" />
   </group>
 </launch>
