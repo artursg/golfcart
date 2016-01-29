@@ -13,8 +13,9 @@
     <node name="vehicle_state_publisher" pkg="robot_state_publisher"
           type="robot_state_publisher">
       <param name="publish_frequency" value="30.0"/>
-      <param name="tf_prefix" value="$(arg namespace)" />
+      <!--param name="tf_prefix" value="$(arg namespace)" /-->
     </node>
-    <node pkg="tf" type="static_transform_publisher" name="odom_broadcaster" args="1 0 0 1 0 0 0 $(arg namespace)/odom $(arg namespace)/base_link 100" />
+    <node pkg="tf" type="static_transform_publisher" name="odom_broadcaster" args="0 0 0 0 0 0 1 /odom /base_link 50" />
+    <!--node pkg="tf" type="static_transform_publisher" name="base_link_chassis_broadcaster" args="0 0 0 1 0 0 0 /base_link /chassis 10" /-->
   </group>
 </launch>
