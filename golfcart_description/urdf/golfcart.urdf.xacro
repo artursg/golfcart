@@ -435,7 +435,7 @@ axle_vel_limit = (2 * pi) * (max_speed / (pi * tire_dia)) =
     <plugin name="em_3905" filename="libgazebo_ros_p3d.so">
       <bodyName>base_link</bodyName>
       <topicName>odom</topicName>
-      <updateRate>100.0</updateRate>
+      <updateRate>10.0</updateRate>
     </plugin>
   </gazebo>
 </robot>
