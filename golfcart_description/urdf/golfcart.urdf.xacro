@@ -425,18 +425,17 @@ axle_vel_limit = (2 * pi) * (max_speed / (pi * tire_dia)) =
         </noise>
       </ray>
       <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
-        <topicName>scan</topicName>
-        <frameName>laser</frameName>
+        <topicName>/scan</topicName>
+        <frameName>/laser</frameName>
       </plugin>
     </sensor>
   </gazebo>
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
     <plugin name="em_3905" filename="libgazebo_ros_p3d.so">
-      <frameName>map</frameName>
       <bodyName>base_link</bodyName>
       <topicName>odom</topicName>
-      <updateRate>1.0</updateRate>
+      <updateRate>10.0</updateRate>
     </plugin>
   </gazebo>
 </robot>
