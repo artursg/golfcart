@@ -6,7 +6,6 @@ import rospy, math
 from geometry_msgs.msg import Twist
 from ackermann_msgs.msg import AckermannDriveStamped
 
-
 def convert_trans_rot_vel_to_steering_angle(v, omega, wheelbase):
   if omega == 0 or v == 0:
     return 0
@@ -31,9 +30,6 @@ def cmd_callback(data):
   msg.drive.speed = v
   
   pub.publish(msg)
-  
-
-
 
 
 if __name__ == '__main__': 
@@ -55,4 +51,3 @@ if __name__ == '__main__':
     
   except rospy.ROSInterruptException:
     pass
-
